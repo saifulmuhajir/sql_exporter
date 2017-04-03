@@ -41,7 +41,7 @@ jobs:
             )
             SELECT
             split_part(inet_server_addr()::text, '/', 1) AS hostname,
-            lag::float AS replication_lag
+            COALESCE(lag, 0)::float AS replication_lag
             FROM lag
 - name: "mydb"
   interval: '5m'
@@ -72,20 +72,20 @@ jobs:
             SELECT
               schemaname::text
             , relname::text
-            , seq_scan::float
-            , seq_tup_read::float
-            , idx_scan::float
-            , idx_tup_fetch::float
-            , n_tup_ins::float
-            , n_tup_upd::float
-            , n_tup_del::float
-            , n_tup_hot_upd::float
-            , n_live_tup::float
-            , n_dead_tup::float
-            , vacuum_count::float
-            , autovacuum_count::float
-            , analyze_count::float
-            , autoanalyze_count::float
+            , COALESCE(seq_scan, 0)::float AS seq_scan
+            , COALESCE(seq_tup_read, 0)::float AS seq_tup_read
+            , COALESCE(idx_scan, 0)::float AS idx_scan
+            , COALESCE(idx_tup_fetch, 0)::float AS idx_tup_fetch
+            , COALESCE(n_tup_ins, 0)::float AS n_tup_ins
+            , COALESCE(n_tup_upd, 0)::float AS n_tup_upd
+            , COALESCE(n_tup_del, 0)::float AS n_tup_del
+            , COALESCE(n_tup_hot_upd, 0)::float AS n_tup_hot_upd
+            , COALESCE(n_live_tup, 0)::float AS n_live_tup
+            , COALESCE(n_dead_tup, 0)::float AS n_dead_tup
+            , COALESCE(vacuum_count, 0)::float AS vacuum_count
+            , COALESCE(autovacuum_count, 0)::float AS autovacuum_count
+            , COALESCE(analyze_count, 0)::float AS analyze_count
+            , COALESCE(autoanalyze_count, 0)::float AS autoanalyze_count
             FROM pg_stat_user_tables;
   - name: "pg_statio_user_tables"
     help: "IO Stats"
@@ -101,8 +101,8 @@ jobs:
             SELECT
               schemaname::text
             , relname::text
-            , heap_blks_read::float
-            , heap_blks_hit::float
-            , idx_blks_read::float
-            , idx_blks_hit::float
+            , COALESCE(heap_blks_read, 0)::float AS heap_blks_read
+            , COALESCE(heap_blks_hit, 0)::float AS heap_blks_hit
+            , COALESCE(idx_blks_read, 0)::float AS idx_blks_read
+            , COALESCE(idx_blks_hit, 0)::float AS idx_blks_hit
             FROM pg_statio_user_tables;
